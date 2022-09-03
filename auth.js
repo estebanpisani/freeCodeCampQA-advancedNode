@@ -1,9 +1,12 @@
+require('dotenv').config();
 const passport = require('passport');
-const LocalStrategy = require('passport-local');
+const LocalStrategy = require('passport-local').Strategy;
+const GithubStrategy = require('passport-github').Strategy;
 const bcrypt = require('bcrypt');
 const ObjectID = require('mongodb').ObjectID;
 
 module.exports = function (app, myDataBase) {
+
     passport.use(new LocalStrategy(
         function (username, password, done) {
             myDataBase.findOne({ username: username }, function (err, user) {
@@ -15,6 +18,18 @@ module.exports = function (app, myDataBase) {
             });
         }
     ));
+    passport.use(new GithubStrategy(
+        {
+            clientID: process.env.GITHUB_CLIENT_ID,
+            clientSecret: process.env.GITHUB_CLIENT_SECRET,
+            callbackURL: 'https://freecodecamp-qa.herokuapp.com/auth/github/callback'
+        },
+        function (accessToken, refreshToken, profile, cb){
+            console.log(profile);
+        }
+    )
+    )
+
     passport.serializeUser((user, done) => {
         done(null, user._id);
     });
