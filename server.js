@@ -76,6 +76,8 @@ myDB(async client => {
       });
 
     io.on('chat message', message => {
+      console.log('Recibió el mensaje');
+      console.log(message);
       io.emit('chat message',
         {
           name: socket.request.user.name,
