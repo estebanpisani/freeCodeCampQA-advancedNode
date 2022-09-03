@@ -29,9 +29,15 @@ myDB(async client => {
   const myDataBase = await client.db('freeCodeCamp').collection('users');
   routes(app, myDataBase);
   auth(app, myDataBase);
+
+  let currentUsers = 0;
   io.on('connection', socket => {
-  console.log('A user has connected');
-});
+    ++currentUsers;
+    io.emit('user count', currentUsers);
+    console.log('A user has connected');
+  });
+
+
 }).catch(e => {
   app.route('/').get((req, res) => {
     res.render(process.cwd() + '/views/pug', { title: e, message: 'Unable to login' });
