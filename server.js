@@ -33,7 +33,8 @@ myDB(async client => {
   app.route('/').get((req, res) => {
     res.render(process.cwd() + '/views/pug', {
       title: 'Connected to Database',
-      message: 'Please login'
+      message: 'Please login',
+      showLogin: true
     });
   });
 
