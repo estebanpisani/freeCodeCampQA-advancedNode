@@ -37,6 +37,13 @@ myDB(async client => {
       showLogin: true
     });
   });
+  app.route('/profile').get((req, res)=>{
+    res.redirect(process.cwd()+'views/pug/profile')
+  })
+
+  app.route('/login').post(passport.authenticate('local',{ failureRedirect: '/' }), (req, res) =>{
+    res.redirect('/profile');
+  })
 
   passport.serializeUser((user, done) => {
     done(null, user._id);
