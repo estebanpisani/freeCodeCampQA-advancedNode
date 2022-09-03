@@ -24,7 +24,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 myDB(async client => {
-  const myDataBase = await client.db('database').collection('users');
+  const myDataBase = await client.db('freeCodeCamp').collection('users');
   routes(app, myDataBase);
   auth(app, myDataBase);
 }).catch(e => {
