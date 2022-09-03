@@ -34,7 +34,7 @@ app.use(passport.session(
   resave: true,
   saveUninitialized: true,
   cookie: { secure: false },
-  key: 'express.sid',
+  key: 'connect.sid',
   store: store
 }
 ));
@@ -59,7 +59,7 @@ myDB(async client => {
   io.use(
     passportSocketIo.authorize({
       cookieParser: cookieParser,
-      key: 'express.sid',
+      key: 'connect.sid',
       secret: process.env.SESSION_SECRET,
       store: store,
       success: onAuthorizeSuccess,
