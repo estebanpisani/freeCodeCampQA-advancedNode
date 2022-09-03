@@ -37,11 +37,10 @@ myDB(async client => {
       showLogin: true
     });
   });
-  app.route('/profile').get((req, res)=>{
-    res.redirect(process.cwd()+'views/pug/profile')
+  app.route('/profile').get(ensureAuthenticated,(req, res) => {
+    res.redirect(process.cwd() + 'views/pug/profile')
   })
-
-  app.route('/login').post(passport.authenticate('local',{ failureRedirect: '/' }), (req, res) =>{
+  app.route('/login').post(passport.authenticate('local', { failureRedirect: '/' }), (req, res) => {
     res.redirect('/profile');
   })
 
@@ -51,22 +50,29 @@ myDB(async client => {
 
   passport.deserializeUser((id, done) => {
     myDataBase.findOne({ _id: new ObjectID(id) }, (err, doc) => {
-    done(null, doc);
+      done(null, doc);
     });
   });
 
   passport.use(new LocalStrategy(
-  function(username, password, done) {
-    myDataBase.findOne({ username: username }, function (err, user) {
-      console.log('User '+ username +' attempted to log in.');
-      if (err) { return done(err); }
-      if (!user) { return done(null, false); }
-      if (password !== user.password) { return done(null, false); }
-      return done(null, user);
-    });
-  }
-));
-  
+    function (username, password, done) {
+      myDataBase.findOne({ username: username }, function (err, user) {
+        console.log('User ' + username + ' attempted to log in.');
+        if (err) { return done(err); }
+        if (!user) { return done(null, false); }
+        if (password !== user.password) { return done(null, false); }
+        return done(null, user);
+      });
+    }
+  ));
+
+  function ensureAuthenticated(req, res, next) {
+    if (req.isAuthenticated()) {
+      return next();
+    }
+    res.redirect('/');
+  };
+
 }).catch(e => {
   app.route('/').get((req, res) => {
     res.render(process.cwd() + '/views/pug', { title: e, message: 'Unable to login' });
