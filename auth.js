@@ -1,6 +1,6 @@
 require('dotenv').config();
 const passport = require('passport');
-const LocalStrategy = require('passport-local').Strategy;
+const LocalStrategy = require('passport-local');
 const GithubStrategy = require('passport-github').Strategy;
 const bcrypt = require('bcrypt');
 const ObjectID = require('mongodb').ObjectID;
