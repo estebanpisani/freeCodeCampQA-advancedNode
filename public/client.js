@@ -17,8 +17,7 @@ $(document).ready(function () {
   $('form').submit(function () {
     var messageToSend = $('#m').val();
     socket.emit('chat message', messageToSend);
-    console.log(messageToSend);
-    // $('#m').val('');
+    $('#m').val('');
     return false; // prevent form submit from refreshing page
   });
 });
