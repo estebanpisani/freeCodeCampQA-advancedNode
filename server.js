@@ -28,16 +28,28 @@ app.use(session({
   cookie: { secure: false }
 }))
 app.use(passport.initialize());
+
 app.use(passport.session(
   {
-  secret: process.env.SESSION_SECRET,
-  resave: true,
-  saveUninitialized: true,
-  cookie: { secure: false },
-  key: 'connect.sid',
-  store: store
-}
+    secret: process.env.SESSION_SECRET,
+    resave: true,
+    saveUninitialized: true,
+    cookie: { secure: false },
+    key: 'connect.sid',
+    store: store
+  }
 ));
+
+io.use(
+  passportSocketIo.authorize({
+    cookieParser: cookieParser,
+    key: 'connect.sid',
+    secret: process.env.SESSION_SECRET,
+    store: store,
+    success: onAuthorizeSuccess,
+    fail: onAuthorizeFail
+  })
+);
 
 function onAuthorizeSuccess(data, accept) {
   console.log('successful connection to socket.io');
@@ -56,16 +68,7 @@ myDB(async client => {
   routes(app, myDataBase);
   auth(app, myDataBase);
 
-  io.use(
-    passportSocketIo.authorize({
-      cookieParser: cookieParser,
-      key: 'connect.sid',
-      secret: process.env.SESSION_SECRET,
-      store: store,
-      success: onAuthorizeSuccess,
-      fail: onAuthorizeFail
-    })
-  );
+
 
   let currentUsers = 0;
   io.on('connection', socket => {
