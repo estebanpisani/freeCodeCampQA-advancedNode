@@ -9,7 +9,6 @@ $(document).ready(function () {
   });
 
   socket.on('chat message', (data) => {
-    console.log('socket.on 1');
     $('#messages').append($('<li>').text(`${data.name}: ${data.message}`));
   });
 
