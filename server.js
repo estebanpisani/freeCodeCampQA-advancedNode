@@ -8,6 +8,8 @@ const session = require('express-session');
 const app = express();
 const routes = require('./routes.js');
 const auth = require('./auth.js');
+const http = require('http').createServer(app);
+const io = require('socket.io')(http);
 
 fccTesting(app); //For FCC testing purposes
 app.use('/public', express.static(process.cwd() + '/public'));
