@@ -19,8 +19,7 @@ module.exports = function (app, myDataBase) {
         });
     });
     app.route('/profile').get(ensureAuthenticated, (req, res) => {
-        res.redirect(process.cwd() + 'views/pug/profile',
-            { username: req.user.username || 'error' })
+        res.redirect({ username: req.user.username || 'error' }), process.cwd() + 'views/pug/profile'          
     })
     app.route('/chat').get(ensureAuthenticated, (req, res)=>{
         res.render(process.cwd()+'/views/pug/chat',
